@@ -4,9 +4,27 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon --exec babel-node server",
+    "migrate": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-tools/load-files": "^6.6.1",
+    "@graphql-tools/merge": "^8.3.12",
+    "@graphql-tools/schema": "^9.0.10",
+    "@prisma/client": "^4.6.1",
+    "apollo-server": "^3.11.1",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0",
+    "graphql-tools": "^8.3.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "nodemon": "^2.0.20",
+    "prisma": "^4.6.1"
+  }
 }

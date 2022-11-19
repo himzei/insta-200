@@ -28,10 +28,17 @@ const resolverFn: any = async (
   // 3번째 인자 context from server.js
   { loggedInUser }
 ): Promise<CommonResult> => {
-  const { filename, createReadStream } = await avatar.file;
-  const readStream = createReadStream();
-  const writeStream = createWriteStream(process.cwd() + "/uploads/" + filename);
-  readStream.pipe(writeStream);
+  let avatarUrl = null;
+  if (avatar) {
+    const { filename, createReadStream } = await avatar.file;
+    const newFilename = `${loggedInUser.id}-${Date.now()}`;
+    const readStream = createReadStream();
+    const writeStream = createWriteStream(
+      process.cwd() + "/uploads/" + newFilename + filename
+    );
+    readStream.pipe(writeStream);
+    avatarUrl = `http://localhost:4000/static/${newFilename}`;
+  }
 
   if (!loggedInUser) {
     return {
@@ -54,6 +61,7 @@ const resolverFn: any = async (
       email,
       bio,
       ...(uglyPassword && { password: uglyPassword }),
+      ...(avatarUrl && { avatar: avatarUrl }),
     },
   });
   if (updatedUser.id) {

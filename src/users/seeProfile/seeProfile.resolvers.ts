@@ -8,6 +8,10 @@ const Resolvers: Resolvers = {
         where: {
           username,
         },
+        include: {
+          following: true,
+          followers: true,
+        },
       })
     ),
   },

@@ -33,7 +33,7 @@ const Resolvers: Resolvers = {
           throw new Error("email/username 이미 사용하고 있습니다.");
         }
         const uglyPassword = await bcrypt.hash(password, 10);
-        return client.user.create({
+        await client.user.create({
           data: {
             username,
             email,
@@ -42,6 +42,9 @@ const Resolvers: Resolvers = {
             password: uglyPassword,
           },
         });
+        return {
+          ok: true,
+        };
       } catch (e) {
         return e;
       }

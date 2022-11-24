@@ -4,17 +4,53 @@ import { protectedResolver } from "../../users/users.utils";
 export default {
   Mutation: {
     toggleLike: protectedResolver(async (_, { id }, { loggedInUser }) => {
-      const ok = await client.photo.findUnique({
+      const photo = await client.photo.findUnique({
         where: {
           id,
         },
       });
-      if (!ok) {
+      if (!photo) {
         return {
           ok: false,
           error: "사진이 없습니다",
         };
       }
+      const like = await client.like.findUnique({
+        where: {
+          photoId_userId: {
+            userId: loggedInUser.id,
+            photoId: id,
+          },
+        },
+      });
+      if (like) {
+        await client.like.delete({
+          where: {
+            photoId_userId: {
+              userId: loggedInUser.id,
+              photoId: id,
+            },
+          },
+        });
+      } else {
+        await client.like.create({
+          data: {
+            user: {
+              connect: {
+                id: loggedInUser.id,
+              },
+            },
+            photo: {
+              connect: {
+                id: photo.id,
+              },
+            },
+          },
+        });
+      }
+      return {
+        ok: true,
+      };
     }),
   },
 };
